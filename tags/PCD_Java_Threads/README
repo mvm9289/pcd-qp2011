@@ -1,0 +1,109 @@
+PCD - Session 1: Java threads
+----------------------------
+
+Author: Miguel Angel Vico Moya
+
+Instructions:
+-------------
+
+For each program (one per folder):
+1. Compile Main.java (in source folder) with "javac pcd/Main.java" command (**)
+2. Execute generated Main.class (in source folder) with "java pcd.Main" command (**)
+3. Read the instructions printed in standard output
+5. Insert the necessary data
+6. See the results
+
+** You can also use Eclipse or other IDE to compile and run the program **
+
+
+Explanation of codes:
+---------------------
+
+Basic Producers and Consumers program
+-------------------------------------
+
+The basic Producers and Consumers program (in Basic_ProdCons folder) consist in a
+program that at first, asks (in the main function) to user how many producers and
+consumers he wants to create, and the maximum size of shared stack used.
+Then, main function creates all threads and stack, and wait until the user indicates
+the start.
+
+The producer and consumer has been implemented as a thread that uses the stack.
+In case of producers, while they not finished, generates a random integer and insert
+it into stack.
+Consumers, while they not finished, only get de last integer inserted into stack.
+
+Then, concurrent processing is done in the ConcurrentStack class.
+This class extends of a stack class of java, with some differences:
+
+    a) This stack has a maximum size, then we must control this. To do this, in push
+       function, while stack size is the maximum, the producer will wait blocked until
+	   a consumer free some space at the stack and notify it.
+	   
+    b) Similar as point a), while stack is empty, the consumer will wait blocked until
+	   a consumer insert some data and notify it.
+	   
+	c) We have to check that two producers do not try to push data into stack at the
+	   same time. To do this, we define push function as synchronized, then only one
+	   thread can be into this function at the same time.
+	   
+    d) Similar as point c) occurs with the consumers. We have to check that two consumers
+	   do not try to pop data from stack at the same time. Therefore we define pop
+	   function as synchronized.
+	   
+    e) At this point, we still have a problem. A producer and a consumer can access
+	   simultaneously to stack, and do a push and pop at the same time. To control
+	   this, we use a lock just before use the stack to push or pop data. This is done
+	   with the block "synchronized(this) {...use the stack...}"
+	   
+Others aspects of the program are not relevant to this session.
+
+
+Amount of elements by Producers and Consumers program
+--------------------------------------------------
+
+Starting with the basic version of program (Basic Producers and Consumers program), we
+need to do that a producer or consumer can push or pop some items at once. Then, we
+add at main function the instructions to ask the user how many items as maximum a
+producer or consumer can push or pop into stack. With this number, on each iteration,
+the producer or consumer generates a random integer X less than this maximum, and
+generates a list with X random integer for insert into stack (in case of producer)
+or pops a list with X elements of stack.
+
+To do this, we need to do some changes in the push and pop functions of ConcurrentStack
+class:
+
+    a) We only permit push X elements if the actual stack size plus X is less or equal
+      than maximum size of stack
+    
+	b) We only permit pop X elements if the actual stack size is greater or equal than
+	   X
+	   
+	c) To insert or get X elements we need to iterate X times in the original stack
+	   structure
+	   
+	d) All of this things, uses the same structure of basic version of program, then
+	   we can supose that the insertion or pop of X elements has been done atomically
+	   
+	   
+Lazy producers program
+----------------------
+
+Starting with the basic version of program (Basic Producers and Consumers program), we
+need to do that the ConcurrentStack only permit insert data to producers if the stack
+size is less than a limit. We add at main function the necessary instructions to
+ask the user how many elements are the limit. Then in the ConcurrentStack class, we add
+a condition to make a push into stack by the producer. This condition do that the
+producers only insert data into stack if the size is less than the limit.
+
+
+Concurrent BST program
+----------------------
+
+Starting with the BST class implemented in previous session, we need to do a concurrent
+insert to the BST. To do this, we use the class Producer created in Producers and
+Consumers program and change the stack structure by the BST, then the insert method of
+BST has been declared as synchronized to permit that only one producer insert an element
+at once. The main program ask the user how many producers and how many elements for each
+producer will be inserted into BST. For each insertion we print the content of BST to
+verify the operation.
