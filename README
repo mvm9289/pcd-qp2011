@@ -43,18 +43,9 @@ This class extends of a stack class of java, with some differences:
     b) Similar as point a), while stack is empty, the consumer will wait blocked until
 	   a consumer insert some data and notify it.
 	   
-	c) We have to check that two producers do not try to push data into stack at the
-	   same time. To do this, we define push function as synchronized, then only one
-	   thread can be into this function at the same time.
-	   
-    d) Similar as point c) occurs with the consumers. We have to check that two consumers
-	   do not try to pop data from stack at the same time. Therefore we define pop
-	   function as synchronized.
-	   
-    e) At this point, we still have a problem. A producer and a consumer can access
-	   simultaneously to stack, and do a push and pop at the same time. To control
-	   this, we use a lock just before use the stack to push or pop data. This is done
-	   with the block "synchronized(this) {...use the stack...}"
+	c) We have to check that two agents do not try to push or pop data into stack at the
+	   same time. To do this, we define push and pop function as synchronized, then only one
+	   thread can be into this functions at the same time.
 	   
 Others aspects of the program are not relevant to this session.
 

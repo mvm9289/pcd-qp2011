@@ -27,18 +27,15 @@ public class ConcurrentStack<E> extends Stack<E>
 		}
 		
 		E res;
-		synchronized(this)
+		for (int i = 0; i < items.size(); i++)
 		{
-			for (int i = 0; i < items.size(); i++)
-			{
-				res = super.push(items.get(i));
-				System.out.println("Produce element " + res);
-			}
-			print();
-			System.out.println();
-			System.out.println("Stack size: " + size());
-			System.out.println();
+			res = super.push(items.get(i));
+			System.out.println("Produce element " + res);
 		}
+		print();
+		System.out.println();
+		System.out.println("Stack size: " + size());
+		System.out.println();
 		notifyAll();
 	}
 	
@@ -54,18 +51,15 @@ public class ConcurrentStack<E> extends Stack<E>
 		}
 
 		ArrayList<E> res = new ArrayList<E>();
-		synchronized(this)
+		for (int i = 0; i < items; i++)
 		{
-			for (int i = 0; i < items; i++)
-			{
-				res.add(super.pop());
-				System.out.println("Consume element " + res.get(i));
-			}
-			print();
-			System.out.println();
-			System.out.println("Stack size: " + size());
-			System.out.println();
+			res.add(super.pop());
+			System.out.println("Consume element " + res.get(i));
 		}
+		print();
+		System.out.println();
+		System.out.println("Stack size: " + size());
+		System.out.println();
 		notifyAll();
 		
 		return res;

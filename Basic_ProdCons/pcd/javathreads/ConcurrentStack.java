@@ -25,17 +25,13 @@ public class ConcurrentStack<E> extends Stack<E>
 			catch (InterruptedException e) {}
 		}
 		
-		E res;
-		synchronized(this)
-		{
-			res = super.push(item);
+		E res = super.push(item);
 
-			System.out.println("Produce element " + res);
-			print();
-			System.out.println();
-			System.out.println("Stack size: " + size());
-			System.out.println();
-		}
+		System.out.println("Produce element " + res);
+		print();
+		System.out.println();
+		System.out.println("Stack size: " + size());
+		System.out.println();
 		notifyAll();
 		
 		return res;
@@ -52,17 +48,13 @@ public class ConcurrentStack<E> extends Stack<E>
 			catch (InterruptedException e) {}
 		}
 
-		E res;
-		synchronized(this)
-		{
-			res = super.pop();
+		E res = super.pop();
 
-			System.out.println("Consume element " + res);
-			print();
-			System.out.println();
-			System.out.println("Stack size: " + size());
-			System.out.println();
-		}
+        System.out.println("Consume element " + res);
+		print();
+		System.out.println();
+		System.out.println("Stack size: " + size());
+		System.out.println();
 		notifyAll();
 		
 		return res;
