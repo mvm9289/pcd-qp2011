@@ -1,0 +1,19 @@
+const N=3
+const C=2
+
+range I=0..N-1
+range S=0..C-1
+
+
+PANEL = PANEL[0],
+PANEL[i:I] = (	inc->PANEL[(i+1)%N]
+			 |	turn[i]->PANEL[i]).
+
+TICKETS = TICKETS[0],
+TICKETS[i:I] = (ticket[i]->TICKETS[(i+1)%N]).
+
+CLIENT = (ticket[i:I]->wait_turn[i]->request->service->CLIENT).
+
+WORKER = (panel.turn[i:I]->cl[s:S].check_turn[i]->cl[s].service->panel.inc->WORKER).
+
+||OFFICE = (panel:PANEL||cl[S]::TICKETS||cl[S]:CLIENT||WORKER)/{cl[s:S].check_turn[i:I]/cl[s].wait_turn[i]}.
