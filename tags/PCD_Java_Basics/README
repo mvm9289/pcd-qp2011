@@ -1,0 +1,15 @@
+PCD - Session 0: Java basics
+----------------------------
+
+Author: Miguel Angel Vico Moya
+
+Instructions:
+-------------
+
+1. Compile Main.java (in source folder) with "javac pcd/Main.java" command (**)
+2. Execute generated Main.class (in source folder) with "java pcd.Main" command (**)
+3. Enter an integer indicating the size of BST (number of elements to be entered)
+4. Enter sequence of elements
+5. See the result (inorder traverse of BST)
+
+** You can also use Eclipse or other IDE to compile and run the program **
