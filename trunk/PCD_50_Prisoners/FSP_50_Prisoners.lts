@@ -1,0 +1,50 @@
+
+// Number of prisoners (without Alice)
+const N = 2
+// Number of prisoners to count by Alice
+const M = 2*(N + 1) - 1
+
+// Prisoners indexes
+range T = 1..N
+// Prisoners to count
+range R = 2..M
+
+
+ALICE = ALICE[2],
+
+ALICE[i : R] = (room.in -> ALICE_IN_ROOM[i]),
+
+ALICE_IN_ROOM[i : R] = (	room.turnOn -> room.turnOff -> room.out -> ALICE[i] // Do nothing
+						|	when(i < M) room.turnOff -> display[(i - 1)/2 + 1] -> room.out -> ALICE[i + 1]
+						|	when(i == M) freeAll[(i - 1)/2 + 1] -> room.out -> STOP).
+
+
+PRISONER = (room.in -> PRISONER_IN_ROOM),
+
+PRISONER_IN_ROOM = (	room.turnOff -> room.turnOn -> room.out -> PRISONER //Do nothing
+					|	room.turnOn -> room.out -> AT_LEAST_ONE),
+
+AT_LEAST_ONE = (room.in -> AT_LEAST_ONE_IN_ROOM),
+
+AT_LEAST_ONE_IN_ROOM = (	room.turnOff -> room.turnOn -> room.out -> AT_LEAST_ONE // Do nothing
+						|	room.turnOn -> room.out -> AT_LEAST_TWO),
+
+AT_LEAST_TWO = (room.in -> AT_LEAST_TWO_IN_ROOM),
+
+AT_LEAST_TWO_IN_ROOM = (	room.turnOff -> room.turnOn -> room.out -> AT_LEAST_TWO // Do nothing
+						|	room.turnOn -> room.turnOff -> room.out -> AT_LEAST_TWO). // Do nothing
+
+// Initially ON
+//LIGHT = (turnOff -> turnOn -> LIGHT).
+
+// Initially OFF
+LIGHT = (turnOn -> turnOff -> LIGHT).
+
+
+DOOR = (in -> out -> DOOR).
+
+
+|| ROOM = (DOOR || LIGHT).
+
+
+|| PRISON = (p[j : T]:PRISONER || a:ALICE || {a, p[j : T]}::room:ROOM).
