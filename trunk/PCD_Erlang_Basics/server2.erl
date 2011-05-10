@@ -29,6 +29,12 @@ process_requests(Clients, Servers) ->
 			NewClients = lists:delete(From, Clients),
 			broadcast(Servers, {leave, Name}),
 			process_requests(NewClients, Servers);
+		{client_kick_req, Name} ->
+			From = search(Clients, Name),
+			From ! {kick},
+			NewClients = lists:delete({Name, From}, Clients),
+			broadcast(NewClients, {kick, Name}),
+			process_requests(NewClients, Servers);
 		{send, Name, Text} ->
 			broadcast(Servers, {message, Name, Text}),
 			process_requests(Clients, Servers);
@@ -50,3 +56,7 @@ process_requests(Clients, Servers) ->
 broadcast(PeerList, Message) ->
 	Fun = fun(Peer) -> Peer ! Message end,
 	lists:map(Fun, PeerList).
+
+search([], _) -> false;
+search([{Name, From}|_], Name) -> From;
+search([{_,_}|T], Name) -> search(T, Name).

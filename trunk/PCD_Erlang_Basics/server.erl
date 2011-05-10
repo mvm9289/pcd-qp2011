@@ -10,12 +10,18 @@ start() ->
 process_requests(Clients) ->
 	receive
 		{client_join_req, Name, From} ->
-			NewClients = [From|Clients],
+			NewClients = [{Name, From}|Clients],
 			broadcast(NewClients, {join, Name}),
 			process_requests(NewClients);
 		{client_leave_req, Name, From} ->
-			NewClients = lists:delete(From, Clients),
+			NewClients = lists:delete({Name, From}, Clients),
 			broadcast(NewClients, {leave, Name}),
+			process_requests(NewClients);
+		{client_kick_req, Name} ->
+			From = search(Clients, Name),
+			From ! {kick},
+			NewClients = lists:delete({Name, From}, Clients),
+			broadcast(NewClients, {kick, Name}),
 			process_requests(NewClients);
 		{send, Name, Text} ->
 			broadcast(Clients, {message, Name, Text}),
@@ -24,5 +30,10 @@ process_requests(Clients) ->
 
 %% Local Functions
 broadcast(PeerList, Message) ->
-	Fun = fun(Peer) -> Peer ! Message end,
+	Fun = fun({_, Peer}) -> Peer ! Message end,
 	lists:map(Fun, PeerList).
+
+search([], _) -> false;
+search([{Name, From}|_], Name) -> From;
+search([{_,_}|T], Name) -> search(T, Name).
+	
