@@ -1,0 +1,14 @@
+PCD - Session 5: an Auction System
+----------------------------------
+
+Author: Miguel Angel Vico Moya
+
+Delivery:
+---------
+
+-Report.pdf:
+	Report of the session.
+	
+-bidder.erl, agent.erl:
+	Auction System in Erlang. bidder.erl is the Erlang code for the bidders and
+	agent.erl the code for the agent of the auction.
